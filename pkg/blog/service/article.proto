@@ -1,0 +1,16 @@
+syntax = "proto3";
+
+package service;
+
+service Article {
+    rpc CreateArticle(CreateArticleRequest) returns (CreateArticleResponse) {}
+}
+
+message CreateArticleRequest {
+    string title = 1;
+    string content = 2;
+}
+
+message CreateArticleResponse {
+    string id = 1;
+}
