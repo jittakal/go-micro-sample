@@ -1,10 +1,11 @@
-package main
+package server
 
 import (
 	"fmt"
 	"log"
 	"net"
 
+	"github.com/jittakal/go-micro-sample/pkg/blog/config"
 	"github.com/jittakal/go-micro-sample/pkg/blog/db"
 	pb "github.com/jittakal/go-micro-sample/pkg/blog/service"
 	"golang.org/x/net/context"
@@ -12,8 +13,8 @@ import (
 	"google.golang.org/grpc/reflection"
 )
 
-const (
-	port = ":50052"
+var (
+	port = fmt.Sprintf(":%d", config.Config.Port)
 )
 
 type (
@@ -37,7 +38,8 @@ func (s *articleServer) CreateArticle(ctx context.Context, in *pb.CreateArticleR
 	return &pb.CreateArticleResponse{Id: "1234"}, nil
 }
 
-func main() {
+// Serve start gRPC serve and listen
+func Serve() {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
@@ -49,6 +51,8 @@ func main() {
 	pb.RegisterArticleServer(s, &articleServer{})
 	// Register reflection service on gRPC server.
 	reflection.Register(s)
+
+	log.Println("Starting gRPC server - ", port)
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}

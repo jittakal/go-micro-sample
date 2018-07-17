@@ -15,7 +15,7 @@ type User struct {
 	Timestamp time.Time     `json:"timestamp" bson:"timestamp"`
 }
 
-//Create new user in mongodb user
+// Create new user in mongodb user
 func (u *User) Create() (string, error) {
 	poolSession := MongoDBSession()
 	session := poolSession.Copy()
@@ -33,7 +33,7 @@ func (u *User) Create() (string, error) {
 	return u.ID.String(), c.Insert(u)
 }
 
-//Update existing user
+// Update existing user
 func (u *User) Update() error {
 	poolSession := MongoDBSession()
 	session := poolSession.Copy()
@@ -44,7 +44,7 @@ func (u *User) Update() error {
 	return c.UpdateId(u.ID, u)
 }
 
-//Delete existing user
+// Delete existing user
 func (u *User) Delete() error {
 	poolSession := MongoDBSession()
 	session := poolSession.Copy()
@@ -54,7 +54,7 @@ func (u *User) Delete() error {
 	return c.RemoveId(u.ID)
 }
 
-//Read return existing user
+// Read return existing user
 func (u *User) Read() error {
 	poolSession := MongoDBSession()
 	session := poolSession.Copy()
@@ -64,8 +64,8 @@ func (u *User) Read() error {
 	return c.FindId(u.ID).One(u)
 }
 
-// FindByID return single user by ID
-func FindByID(id bson.ObjectId) (User, error) {
+// FindUserByID return single user by ID
+func FindUserByID(id bson.ObjectId) (User, error) {
 	poolSession := MongoDBSession()
 	session := poolSession.Copy()
 	defer session.Close()
@@ -76,8 +76,8 @@ func FindByID(id bson.ObjectId) (User, error) {
 	return user, err
 }
 
-// FindByEmail return single user matching email id
-func FindByEmail(email string) (User, error) {
+// FindUserByEmail return single user matching email id
+func FindUserByEmail(email string) (User, error) {
 	poolSession := MongoDBSession()
 	session := poolSession.Copy()
 	defer session.Close()

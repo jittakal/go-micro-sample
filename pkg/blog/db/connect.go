@@ -5,40 +5,33 @@ import (
 	"sync"
 	"time"
 
+	"github.com/jittakal/go-micro-sample/pkg/blog/config"
 	mgo "gopkg.in/mgo.v2"
 )
 
 const (
-	// ToDo read from configuration
-
-	// Hosts MongoDB Database Server Hosts
-	Hosts = "192.168.99.100:32332"
-	// AuthDatabase used for initial connection authentication
-	AuthDatabase = "admin"
-	// AuthUserName used for database authentication
-	AuthUserName = "root"
-	// AuthPassword used for database authentication
-	AuthPassword = "password"
-	// Database for blogs storage
-	Database = "myblogs"
 	// UserCollection name of the collection
 	UserCollection = "user"
 	// ArticleCollection name of the article collection
 	ArticleCollection = "articles"
 )
 
-var mongoSession *mgo.Session
-var once sync.Once
+var (
+	once         sync.Once
+	mongoSession *mgo.Session
+
+	c = config.GetConfig()
+)
 
 //MongoDBSession will return singe instance of session
 func MongoDBSession() *mgo.Session {
 	once.Do(func() {
 		mongoDBDialInfo := &mgo.DialInfo{
-			Addrs:    []string{Hosts},
+			Addrs:    []string{c.MongoDB.Auth.Servers},
 			Timeout:  60 * time.Second,
-			Database: AuthDatabase,
-			Username: AuthUserName,
-			Password: AuthPassword,
+			Database: c.MongoDB.Auth.Database,
+			Username: c.MongoDB.Auth.Username,
+			Password: c.MongoDB.Auth.Password,
 		}
 
 		// Create a session which maintains a pool of socket connections
