@@ -47,7 +47,7 @@ func (a *Article) Create() (string, error) {
 	if a.Timestamp == defaultTime {
 		a.Timestamp = time.Now()
 	}
-	c := session.DB(Database).C(ArticleCollection)
+	c := session.DB(database).C(ArticleCollection)
 	return a.ID.String(), c.Insert(a)
 }
 
@@ -57,7 +57,7 @@ func (a *Article) Update() error {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(ArticleCollection)
+	c := session.DB(database).C(ArticleCollection)
 
 	return c.UpdateId(a.ID, a)
 }
@@ -68,7 +68,7 @@ func (a *Article) Delete() error {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(ArticleCollection)
+	c := session.DB(database).C(ArticleCollection)
 	return c.RemoveId(a.ID)
 }
 
@@ -78,7 +78,7 @@ func (a *Article) Read() error {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(ArticleCollection)
+	c := session.DB(database).C(ArticleCollection)
 	return c.FindId(a.ID).One(a)
 }
 
@@ -112,7 +112,7 @@ func FindArticleByID(id bson.ObjectId) (Article, error) {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(ArticleCollection)
+	c := session.DB(database).C(ArticleCollection)
 	article := Article{}
 	err := c.FindId(id).One(&article)
 	return article, err
@@ -124,7 +124,7 @@ func FindArticlesByAuthor(author bson.ObjectId) ([]Article, error) {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(ArticleCollection)
+	c := session.DB(database).C(ArticleCollection)
 	articles := []Article{}
 	err := c.Find(bson.M{"author": author}).All(&articles)
 	return articles, err
@@ -136,7 +136,7 @@ func FindArticlesByTags(tags []string) ([]Article, error) {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(ArticleCollection)
+	c := session.DB(database).C(ArticleCollection)
 	articles := []Article{}
 	err := c.Find(bson.M{"tags": tags}).All(&articles)
 	return articles, err

@@ -29,7 +29,7 @@ func (u *User) Create() (string, error) {
 	if u.Timestamp == defaultTime {
 		u.Timestamp = time.Now()
 	}
-	c := session.DB(Database).C(UserCollection)
+	c := session.DB(database).C(UserCollection)
 	return u.ID.String(), c.Insert(u)
 }
 
@@ -39,7 +39,7 @@ func (u *User) Update() error {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(UserCollection)
+	c := session.DB(database).C(UserCollection)
 
 	return c.UpdateId(u.ID, u)
 }
@@ -50,7 +50,7 @@ func (u *User) Delete() error {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(UserCollection)
+	c := session.DB(database).C(UserCollection)
 	return c.RemoveId(u.ID)
 }
 
@@ -60,7 +60,7 @@ func (u *User) Read() error {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(UserCollection)
+	c := session.DB(database).C(UserCollection)
 	return c.FindId(u.ID).One(u)
 }
 
@@ -70,7 +70,7 @@ func FindUserByID(id bson.ObjectId) (User, error) {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(UserCollection)
+	c := session.DB(database).C(UserCollection)
 	user := User{}
 	err := c.FindId(id).One(&user)
 	return user, err
@@ -82,7 +82,7 @@ func FindUserByEmail(email string) (User, error) {
 	session := poolSession.Copy()
 	defer session.Close()
 	session.SetMode(mgo.Monotonic, true)
-	c := session.DB(Database).C(UserCollection)
+	c := session.DB(database).C(UserCollection)
 	user := User{}
 	err := c.Find(bson.M{"email": email}).One(&user)
 	return user, err

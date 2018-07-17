@@ -20,10 +20,11 @@ var (
 	once         sync.Once
 	mongoSession *mgo.Session
 
-	c = config.GetConfig()
+	c        = config.GetConfig()
+	database = c.MongoDB.App.Database
 )
 
-//MongoDBSession will return singe instance of session
+// MongoDBSession will return singe instance of session
 func MongoDBSession() *mgo.Session {
 	once.Do(func() {
 		mongoDBDialInfo := &mgo.DialInfo{
