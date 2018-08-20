@@ -1,6 +1,6 @@
 //go:generate protoc -I ../service --go_out=plugins=grpc:../../../ ../service/echo.proto
 
-package main
+package server
 
 import (
 	"fmt"
@@ -24,7 +24,8 @@ func (s *server) DoEcho(ctx context.Context, in *pb.Request) (*pb.Reply, error) 
 	return &pb.Reply{Message: in.Message}, nil
 }
 
-func main() {
+// Start function starts the gRPC server
+func Start() {
 	lis, err := net.Listen("tcp", port)
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
