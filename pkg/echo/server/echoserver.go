@@ -3,17 +3,19 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net"
+
 	"golang.org/x/net/context"
 
+	pb "github.com/jittakal/go-micro-sample/pkg/echo/service"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
-	pb "github.com/jittakal/go-micro-sample/pkg/echo/service"
 )
 
 const (
-	port = ":50051"
+	port = "0.0.0.0:50051"
 )
 
 type server struct{}
@@ -31,6 +33,7 @@ func main() {
 	pb.RegisterEchoServer(s, &server{})
 	// Register reflection service on gRPC server.
 	reflection.Register(s)
+	fmt.Println(lis.Addr())
 	if err := s.Serve(lis); err != nil {
 		log.Fatalf("failed to serve: %v", err)
 	}
